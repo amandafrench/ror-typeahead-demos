@@ -44,11 +44,11 @@ $('#basic .typeahead, #basic-department .typeahead, #addl-info .typeahead').type
           altNames = altNames.replace(/,\s*$/, "");
           
           var displayName = data.names?.find(name => name.types.includes('ror_display'))?.value || '';
-          var orgType = data.types?.[0] || '';
+          var orgType = data.types?.[0] ? data.types[0].charAt(0).toUpperCase() + data.types[0].slice(1) : '';
+          var cityName = data.locations[0].geonames_details?.name || '';
           var countryName = data.locations[0].geonames_details?.country_name || '';
           
-          return '<p>' + displayName + '<br><small>' + orgType + ', ' + countryName + '<br><i>'+ altNames + '</i></small></p>';
-      }
+          return '<p>' + displayName + '<br><small>' + orgType + ' - ' + cityName + ', ' + countryName + '<br><i>'+ altNames + '</i></small></p>';      }
     },
     display: function (data) {
       return data.names?.find(name => name.types.includes('ror_display'))?.value || '';
