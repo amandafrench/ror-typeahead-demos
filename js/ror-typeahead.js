@@ -44,10 +44,10 @@ $('#basic .typeahead, #basic-department .typeahead, #addl-info .typeahead').type
           altNames = altNames.replace(/,\s*$/, "");
           
           var displayName = data.names?.find(name => name.types.includes('ror_display'))?.value || '';
-          var orgType = data.types?.[0] || '';
+          var orgTypes = data.types?.map(type => type.charAt(0).toUpperCase() + type.slice(1)).join(', ') || '';
           var countryName = data.locations?.geonames_details?.country_name || '';
           
-          return '<p>' + displayName + '<br><small>' + orgType + ', ' + countryName + '<br><i>'+ altNames + '</i></small></p>';
+          return '<p>' + displayName + '<br><small>' + orgTypes + ', ' + countryName + '<br><i>'+ altNames + '</i></small></p>';
       }
     },
     display: function (data) {
