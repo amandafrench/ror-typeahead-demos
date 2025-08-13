@@ -48,7 +48,8 @@ $('#basic .typeahead, #basic-department .typeahead, #addl-info .typeahead').type
           var cityName = data.locations[0].geonames_details?.name || '';
           var countryName = data.locations[0].geonames_details?.country_name || '';
           
-          return '<p>' + displayName + '<br><small>' + orgType + ' - ' + cityName + ', ' + countryName + '<br><i>'+ altNames + '</i></small></p>';      }
+          return '<p>' + displayName + '<br><small>' + orgType + ' - ' + cityName + ', ' + countryName + '<br><i>'+ altNames + '</i></small></p>';      
+          }
     },
     display: function (data) {
       return data.names?.find(name => name.types.includes('ror_display'))?.value || '';
