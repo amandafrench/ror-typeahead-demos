@@ -1,5 +1,10 @@
 var ROR_API_URL = "https://api.ror.org/v2/organizations?query="
 
+suggestion: function (data) {
+    console.log('ROR data structure:', data); // Add this line
+    // ... rest of code
+}
+
 $('#basic .typeahead, #basic-department .typeahead, #addl-info .typeahead').typeahead({
     hint: true,
     highlight: true,
