@@ -69,8 +69,8 @@ $('#basic #name-01').bind('change', function() {
 
 $('#basic-department .typeahead').bind('typeahead:select', function(ev, suggestion) {
   console.log(suggestion)
-  var cityName = suggestion.locations?.geonames_details?.name || '';
-  var countryName = suggestion.locations?.geonames_details?.country_name || '';
+  var cityName = suggestion.locations[0].geonames_details.name || '';
+  var countryName = suggestion.locations[0].geonames_details.country_name || '';
   $('#city').val(cityName);
   $('#country').val(countryName);
   $('#ror-id-02').html(JSON.stringify(suggestion, undefined, 4));
@@ -82,8 +82,8 @@ $('#basic #name-02').bind('change', function() {
 
 $('#addl-info .typeahead').bind('typeahead:select', function(ev, suggestion) {
   console.log(suggestion)
-  var cityName = suggestion.locations?.geonames_details?.name || '';
-  var countryName = suggestion.locations?.geonames_details?.country_name || '';
+  var cityName = suggestion.locations[0].geonames_details.name || '';
+  var countryName = suggestion.locations[0].geonames_details.country_name || '';
   $('#city-03').val(cityName);
   $('#country-03').val(countryName);
   $('#ror-id-03').html(JSON.stringify(suggestion, undefined, 4));
