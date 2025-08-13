@@ -1,4 +1,4 @@
-var ROR_API_URL = "https://api.ror.org/v1/organizations?affiliation="
+var ROR_API_URL = "https://api.ror.org/v2/organizations?affiliation="
 
 $('#simple-api .typeahead').typeahead({
     hint: true,
@@ -27,23 +27,40 @@ $('#simple-api .typeahead').typeahead({
         '</div>'
       ].join('\n'),
       suggestion: function (data) {
-          return '<p><strong>' + data.organization.name + '</strong><br>' + data.organization.types[0] + ', ' + data.organization.country.country_name + '</p>';
+          var displayName = data.names.find(name => name.types.includes('ror_display'))?.value || '';
+          var orgType = data.types[0] || '';
+          var countryName = data.locations?.geonames_details?.country_name || '';
+          return '<p><strong>' + displayName + '</strong><br>' + orgType + ', ' + countryName + '</p>';
       }
     },
     display: function (data) {
-      return data.organization.name;
+      return data.names.find(name => name.types.includes('ror_display'))?.value || '';
     },
     value: function(data) {
-      return data.organization.identifier;
+      return data.id;
     }
 });
 
 $('#simple-api .typeahead').bind('typeahead:select', function(ev, suggestion) {
-  $('#ror-id-01').val(suggestion.organization.id);
+  $('#ror-id-01').val(suggestion.id);
 });
 
 var orgs = new Bloodhound({
-  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name', 'acronyms', 'aliases', 'labels'),
+  datumTokenizer: function(datum) {
+    var tokens = [];
+    // Extract display name
+    var displayName = datum.names?.find(name => name.types.includes('ror_display'))?.value;
+    if (displayName) tokens.push(displayName);
+    
+    // Extract all name values for tokenization
+    if (datum.names) {
+      datum.names.forEach(name => {
+        if (name.value) tokens.push(name.value);
+      });
+    }
+    
+    return Bloodhound.tokenizers.whitespace(tokens.join(' '));
+  },
   queryTokenizer: Bloodhound.tokenizers.whitespace,
   local: ORGS
 });
@@ -66,14 +83,17 @@ $('#static-file  .typeahead').typeahead({
       '</div>'
     ].join('\n'),
     suggestion: function (data) {
-        return '<p><strong>' + data.name + '</strong><br>' + data.type + ', ' + data.country_name + '</p>';
+        var displayName = data.names?.find(name => name.types.includes('ror_display'))?.value || '';
+        var orgType = data.types?.[0] || '';
+        var countryName = data.locations?.geonames_details?.country_name || '';
+        return '<p><strong>' + displayName + '</strong><br>' + orgType + ', ' + countryName + '</p>';
     }
   },
   display: function (data) {
-    return data.name;
+    return data.names?.find(name => name.types.includes('ror_display'))?.value || '';
   },
   value: function(data) {
-    return data.identifier;
+    return data.id;
   }
 });
 
