@@ -28,9 +28,10 @@ $('#simple-api .typeahead').typeahead({
       ].join('\n'),
       suggestion: function (data) {
           var displayName = data.names.find(name => name.types.includes('ror_display'))?.value || '';
-          var orgTypes = data.types?.map(type => type.charAt(0).toUpperCase() + type.slice(1)).join(', ') || '';
+          var orgType = data.types?.[0] ? data.types[0].charAt(0).toUpperCase() + data.types[0].slice(1) : '';
+          var cityName = data.locations?.geonames_details?.name || '';
           var countryName = data.locations?.geonames_details?.country_name || '';
-          return '<p><strong>' + displayName + '</strong><br>' + orgTypes + ', ' + countryName + '</p>';
+          return '<p><strong>' + displayName + '</strong><br>' + orgType + ' ' + cityName + ', ' + countryName + '</p>';
       }
     },
     display: function (data) {
@@ -84,9 +85,10 @@ $('#static-file  .typeahead').typeahead({
     ].join('\n'),
     suggestion: function (data) {
         var displayName = data.names?.find(name => name.types.includes('ror_display'))?.value || '';
-        var orgTypes = data.types?.map(type => type.charAt(0).toUpperCase() + type.slice(1)).join(', ') || '';
+        var orgType = data.types?.[0] ? data.types[0].charAt(0).toUpperCase() + data.types[0].slice(1) : '';
+        var cityName = data.locations?.geonames_details?.name || '';
         var countryName = data.locations?.geonames_details?.country_name || '';
-        return '<p><strong>' + displayName + '</strong><br>' + orgTypes + ', ' + countryName + '</p>';
+        return '<p><strong>' + displayName + '</strong><br>' + orgType + ' ' + cityName + ', ' + countryName + '</p>';
     }
   },
   display: function (data) {
