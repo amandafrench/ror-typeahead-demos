@@ -1,9 +1,5 @@
 var ROR_API_URL = "https://api.ror.org/v2/organizations?query="
 
-suggestion: function (data) {
-    console.log('ROR data structure:', data); // Add this line
-    // ... rest of code
-}
 
 $('#basic .typeahead, #basic-department .typeahead, #addl-info .typeahead').typeahead({
     hint: true,
@@ -25,36 +21,37 @@ $('#basic .typeahead, #basic-department .typeahead, #addl-info .typeahead').type
             }
         });
     },
+
+    
     templates: {
       pending: [
         '<div class="empty-message">',
           'Fetching organizations list',
         '</div>'
       ].join('\n'),
-      suggestion: function (data) {
-          var altNames = "";
-          
-          if(data.names && data.names.length > 0) {
-            for (let i = 0; i < data.names.length; i++){
-              // Include aliases, acronyms, and labels, but exclude ror_display
-              if((data.names[i].types.includes('alias') || 
-                  data.names[i].types.includes('acronym') || 
-                  data.names[i].types.includes('label')) && 
-                 !data.names[i].types.includes('ror_display')) {
-                altNames += data.names[i].value + ", ";
-              }
-            }
-          }
-          
-          altNames = altNames.replace(/,\s*$/, "");
-          
-          var displayName = data.names?.find(name => name.types.includes('ror_display'))?.value || '';
-          var orgType = data.types?.[0] ? data.types[0].charAt(0).toUpperCase() || ''; 
-          var cityName = data.locations?.geonames_details?.name || '';
-          var countryName = data.locations?.geonames_details?.country_name || '';
-          
-          return '<p>' + displayName + '<br><small>' + orgType + ', ' + cityName + ' ' + countryName + '<br><i>'+ altNames + '</i></small></p>';
-      }
+suggestion: function (data) {
+    var displayName = data.names.find(name => name.types.includes('ror_display'))?.value || '';
+    var orgType = data.types?.[0] ? data.types[0].charAt(0).toUpperCase() + data.types[0].slice(1) : '';
+    var cityName = data.locations?.geonames_details?.name || '';
+    var countryName = data.locations?.geonames_details?.country_name || '';
+    
+    // Build location string conditionally
+    var locationStr = '';
+    if (cityName && countryName) {
+        locationStr = cityName + ', ' + countryName;
+    } else if (countryName) {
+        locationStr = countryName;
+    } else if (cityName) {
+        locationStr = cityName;
+    }
+    
+    var secondLine = orgType;
+    if (locationStr) {
+        secondLine += (orgType ? ' • ' : '') + locationStr;
+    }
+    
+    return '<p><strong>' + displayName + '</strong><br>' + secondLine + '</p>';
+}
     },
     display: function (data) {
       return data.names?.find(name => name.types.includes('ror_display'))?.value || '';
